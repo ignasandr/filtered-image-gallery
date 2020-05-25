@@ -5,33 +5,21 @@ class Picture {
         this.visible = false;
     }
     spawn(element, id){
-        const frame = document.createElement('div');
-        //create div container, add class and data-index attribute
-        frame.classList.add('image');
-        frame.setAttribute('data-index', id);
-        //upload image from folder
-        const img = document.createElement('img');
-        img.src = this.link;
-        //add image to div container
-        frame.appendChild(img);
-        //add info layer
-        const info = document.createElement('div');
-        info.classList.add('info');
-        const lnk1 = document.createElement('a');
-        lnk1.href = this.link;
-        const plus = document.createElement('i');
-        lnk1.appendChild(plus);
-        const h5 = document.createElement('h5');
-        const lnk2 = document.createElement('a');
-        lnk2.href = "#";
-        lnk2.textContent = "Our Photography";
-        h5.appendChild(lnk2);
-        info.appendChild(lnk1);
-        info.appendChild(h5);
-        frame.appendChild(info);
-
-        //put container + image + info layer into gallery
-        element.appendChild(frame);
+        //create HTML outline
+        const HTML = `
+        <div class="image" data-index=${id}>
+            <img src="${this.link}">
+            <div class="info">
+                <a href="${this.link}">
+                    <i></i>
+                </a>
+                <h5>
+                    <a href="#">Our Photography</a>
+                </h5>
+            </div>
+        </div>`;
+        //add to the end of gallery
+        element.insertAdjacentHTML('beforeend', HTML);
         this.visible = true;
         this.inDOM = gallery.querySelector(`[data-index="${id}"]`);
     }
