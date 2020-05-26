@@ -22,6 +22,11 @@ class Picture {
         element.insertAdjacentHTML('beforeend', HTML);
         this.visible = true;
         this.inDOM = gallery.querySelector(`[data-index="${id}"]`);
+        const slide = this.inDOM.querySelector('.info > a');
+        slide.addEventListener('click', e => {
+            e.preventDefault();
+            openModal(id);
+        });
     }
     hide(){
         this.inDOM.style.display = "none";
@@ -35,6 +40,7 @@ class Picture {
 
 let loadedPictures = [];
 const navBar = document.querySelector('.portfolio > .row > nav');
+const modal = document.querySelector('#myModal');
 
 function createNav(tags) {
     tags.forEach(tag => {
@@ -93,6 +99,53 @@ function activateFilter() {
             }
         }
     });
+}
+
+function openModal(currentSlide) {
+    let cs = currentSlide;
+    const body = document.querySelector("body");
+    const left = modal.querySelector(".arrow-left");
+    const right = modal.querySelector(".arrow-right");
+    const slide = modal.querySelector(".modal-content > .slides > img");
+    const counter = modal.querySelector(".modal-content > .slides > .numbertext");
+    const bg = modal.querySelector(".modal-bg");
+    const closeBtn = modal.querySelector(".close");
+
+    //functions
+    const updateSlide = () => slide.src = loadedPictures[cs].link;
+    const updateCounter = () => counter.textContent = `${cs + 1} of ${loadedPictures.length}`;
+    const next = () => {
+        cs = (cs + 1) % loadedPictures.length;
+        updateSlide();
+        updateCounter();
+    }
+    const close = () => {
+        modal.style.display = "none";
+        body.style.overflow = "visible";
+    }
+
+    //initial calls
+    updateSlide();
+    updateCounter();
+    modal.style.display = "block";
+    body.style.overflow = "hidden";
+    // left button action
+    left.addEventListener('click', e => {
+        if (cs > 0) {
+            cs -= 1;
+        }
+        else {
+            cs = loadedPictures.length - 1;
+        }
+        updateSlide();
+        updateCounter();
+    });
+    //right button, click on slide action
+    right.addEventListener('click', next);
+    slide.addEventListener('click', next);
+
+    bg.addEventListener('click', close);
+    closeBtn.addEventListener('click', close);
 }
 
 export default {
