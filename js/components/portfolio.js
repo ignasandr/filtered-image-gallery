@@ -118,6 +118,18 @@ function openModal(currentSlide) {
         cs = (cs + 1) % loadedPictures.length;
         updateSlide();
         updateCounter();
+        stopPropagation();
+    }
+    const prev = () => {
+        if (cs > 0) {
+            cs -= 1;
+        }
+        else {
+            cs = loadedPictures.length - 1;
+        }
+        updateSlide();
+        updateCounter();
+        stopPropagation();
     }
     const close = () => {
         modal.style.display = "none";
@@ -130,22 +142,31 @@ function openModal(currentSlide) {
     modal.style.display = "block";
     body.style.overflow = "hidden";
     // left button action
-    left.addEventListener('click', e => {
-        if (cs > 0) {
-            cs -= 1;
-        }
-        else {
-            cs = loadedPictures.length - 1;
-        }
-        updateSlide();
-        updateCounter();
-    });
+    left.addEventListener('click', prev);
+
     //right button, click on slide action
     right.addEventListener('click', next);
     slide.addEventListener('click', next);
 
     bg.addEventListener('click', close);
     closeBtn.addEventListener('click', close);
+
+    //listen for keyboard button presses
+    document.addEventListener("keydown", e => {
+        if (e.isComposing || e.keyCode === 37) {
+          prev();
+        }
+    });
+    document.addEventListener("keydown", e => {
+        if (e.isComposing || e.keyCode === 39) {
+          next();
+        }
+    });
+    document.addEventListener("keydown", e => {
+        if (e.isComposing || e.keyCode === 27) {
+          close();
+        }
+    });
 }
 
 export default {
